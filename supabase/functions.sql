@@ -236,6 +236,29 @@ begin
 end;
 $$;
 
+-- Notify every active user in a department - used when work is completed, so
+-- anyone in the requesting department (not just the original requester) sees
+-- the completion report and can confirm/reopen the request.
+create or replace function notify_department(
+  p_department_id uuid,
+  p_request_id uuid,
+  p_type notification_type,
+  p_title text,
+  p_body text
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into notifications (recipient_id, request_id, type, title, body)
+  select id, p_request_id, p_type, p_title, p_body
+  from profiles
+  where department_id = p_department_id and is_active = true;
+end;
+$$;
+
 -- Notify every active Engineering user (ENGINEERING_MANAGER, ENGINEER) - used on submit.
 create or replace function notify_engineering_team(
   p_request_id uuid,

@@ -75,7 +75,7 @@ export async function submitCompletionReport(input: CompletionReportInput): Prom
   try {
     const { data: req, error: reqError } = await supabase
       .from("maintenance_requests")
-      .select("id, request_number, requested_by")
+      .select("id, request_number, requested_by, department_id")
       .eq("id", values.request_id)
       .single();
     if (reqError || !req) throw reqError;
@@ -110,8 +110,8 @@ export async function submitCompletionReport(input: CompletionReportInput): Prom
     if (err2) throw err2;
 
     const tmpl = notificationTemplate("CONFIRMATION_REQUIRED", req.request_number);
-    await supabase.rpc("create_notification", {
-      p_recipient_id: req.requested_by,
+    await supabase.rpc("notify_department", {
+      p_department_id: req.department_id,
       p_request_id: values.request_id,
       p_type: "CONFIRMATION_REQUIRED",
       p_title: tmpl.title,

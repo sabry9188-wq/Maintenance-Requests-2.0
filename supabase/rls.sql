@@ -141,6 +141,7 @@ create policy "requests_update_station_confirmation" on maintenance_requests for
     and (
       requested_by = auth.uid()
       or station_id = (select station_id from profiles where id = auth.uid())
+      or department_id = (select department_id from profiles where id = auth.uid())
     )
   )
   with check (
@@ -303,7 +304,11 @@ create policy "feedback_insert_requester" on feedback for insert to authenticate
       select 1 from maintenance_requests r
       where r.id = request_id
         and r.status in ('PENDING_CONFIRMATION', 'CLOSED')
-        and (r.requested_by = auth.uid() or r.station_id = (select station_id from profiles where id = auth.uid()))
+        and (
+          r.requested_by = auth.uid()
+          or r.station_id = (select station_id from profiles where id = auth.uid())
+          or r.department_id = (select department_id from profiles where id = auth.uid())
+        )
     )
   );
 

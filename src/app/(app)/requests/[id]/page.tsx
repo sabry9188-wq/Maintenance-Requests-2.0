@@ -49,7 +49,9 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
   const isOwnRequest = request.requested_by === session.id;
   const isStationScope =
     role === "STATION_USER" &&
-    (isOwnRequest || request.station_id === session.profile.station_id);
+    (isOwnRequest ||
+      request.station_id === session.profile.station_id ||
+      request.department_id === session.profile.department_id);
 
   const completionReport = updates.find((u) => u.update_type === "COMPLETION_REPORT");
   const workUpdates = updates.filter((u) => u.update_type === "WORK_UPDATE");
