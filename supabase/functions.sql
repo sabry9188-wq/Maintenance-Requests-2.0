@@ -259,7 +259,8 @@ begin
 end;
 $$;
 
--- Notify every active Engineering user (ENGINEERING_MANAGER, ENGINEER) - used on submit.
+-- Notify every active Engineering user (ENGINEERING_MANAGER, ENGINEER) plus
+-- Admins - used when a new request is submitted or a request is reopened.
 create or replace function notify_engineering_team(
   p_request_id uuid,
   p_type notification_type,
@@ -275,7 +276,7 @@ begin
   insert into notifications (recipient_id, request_id, type, title, body)
   select id, p_request_id, p_type, p_title, p_body
   from profiles
-  where role in ('ENGINEERING_MANAGER', 'ENGINEER') and is_active = true;
+  where role in ('ENGINEERING_MANAGER', 'ENGINEER', 'ADMIN') and is_active = true;
 end;
 $$;
 
