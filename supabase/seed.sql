@@ -38,7 +38,7 @@ on conflict (name) do nothing;
 -- ============================================================================
 
 insert into areas (station_id, name, description)
-select s.code, a.name, a.description
+select s.id, a.name, a.description
 from (values
   ('01', 'Hatchery Larval Rearing Room', null),
   ('01', 'Hatchery Broodstock Room', null),
