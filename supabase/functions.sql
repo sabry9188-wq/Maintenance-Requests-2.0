@@ -13,13 +13,33 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  v_station_id uuid;
+  v_department_id uuid;
 begin
-  insert into public.profiles (id, full_name, email, role)
+  -- Self-registration lets a user pick their own station/department at
+  -- sign-up (sent as auth metadata); Admin can still correct it later from
+  -- the Users page. Role is never taken from metadata - always STATION_USER.
+  begin
+    v_station_id := nullif(new.raw_user_meta_data->>'station_id', '')::uuid;
+  exception when others then
+    v_station_id := null;
+  end;
+
+  begin
+    v_department_id := nullif(new.raw_user_meta_data->>'department_id', '')::uuid;
+  exception when others then
+    v_department_id := null;
+  end;
+
+  insert into public.profiles (id, full_name, email, role, station_id, department_id)
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
     new.email,
-    'STATION_USER'
+    'STATION_USER',
+    v_station_id,
+    v_department_id
   );
   return new;
 end;

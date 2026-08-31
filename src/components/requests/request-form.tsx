@@ -97,7 +97,7 @@ export function RequestForm({ options }: { options: FormOptions }) {
         }
       }
 
-      toast.success(`Request submitted successfully. Request Number: ${result.data.request_number}`);
+      toast.success(`Request submitted successfully. JRF No: ${result.data.request_number}`);
       router.push(`/requests/${result.data.id}`);
     } catch {
       toast.error("Unable to submit maintenance request. Please try again.");
@@ -109,12 +109,12 @@ export function RequestForm({ options }: { options: FormOptions }) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
         <CardHeader>
-          <CardTitle>Request Details</CardTitle>
+          <CardTitle>Job Request Form (JRF)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FieldGroup>
-              <Label htmlFor="station_id">Station</Label>
+              <Label htmlFor="station_id">Station No</Label>
               <Select id="station_id" {...register("station_id")}>
                 <option value="">Select station</option>
                 {options.stations.map((s) => (
@@ -127,7 +127,7 @@ export function RequestForm({ options }: { options: FormOptions }) {
             </FieldGroup>
 
             <FieldGroup>
-              <Label htmlFor="department_id">Department</Label>
+              <Label htmlFor="department_id">Department / Section</Label>
               <Select id="department_id" {...register("department_id")}>
                 <option value="">Select department</option>
                 {options.departments.map((d) => (
@@ -140,7 +140,7 @@ export function RequestForm({ options }: { options: FormOptions }) {
             </FieldGroup>
 
             <FieldGroup>
-              <Label htmlFor="area_id">Area / Location</Label>
+              <Label htmlFor="area_id">Work Location</Label>
               <Select id="area_id" {...register("area_id")}>
                 <option value="">Select area (optional)</option>
                 {filteredAreas.map((a) => (
@@ -152,7 +152,7 @@ export function RequestForm({ options }: { options: FormOptions }) {
             </FieldGroup>
 
             <FieldGroup>
-              <Label htmlFor="asset_id">Asset / Equipment</Label>
+              <Label htmlFor="asset_id">Equip. Details</Label>
               <Select id="asset_id" {...register("asset_id")}>
                 <option value="">Select equipment (optional)</option>
                 {filteredAssets.map((a) => (
@@ -207,17 +207,17 @@ export function RequestForm({ options }: { options: FormOptions }) {
           </div>
 
           <FieldGroup>
-            <Label htmlFor="problem_title">Problem Title</Label>
+            <Label htmlFor="problem_title">Work Summary (Short Title)</Label>
             <Input id="problem_title" placeholder="Short summary of the problem" {...register("problem_title")} />
             <FieldError>{errors.problem_title?.message}</FieldError>
           </FieldGroup>
 
           <FieldGroup>
-            <Label htmlFor="problem_description">Problem Description</Label>
+            <Label htmlFor="problem_description">Work Details</Label>
             <Textarea
               id="problem_description"
               rows={4}
-              placeholder="Describe the problem in detail"
+              placeholder="Describe the work needed in detail"
               {...register("problem_description")}
             />
             <FieldError>{errors.problem_description?.message}</FieldError>
@@ -278,7 +278,7 @@ export function RequestForm({ options }: { options: FormOptions }) {
           </FieldGroup>
 
           <FieldGroup>
-            <Label htmlFor="additional_comments">Additional Comments</Label>
+            <Label htmlFor="additional_comments">Remarks</Label>
             <Textarea id="additional_comments" rows={3} {...register("additional_comments")} />
           </FieldGroup>
         </CardContent>
@@ -289,7 +289,7 @@ export function RequestForm({ options }: { options: FormOptions }) {
           Cancel
         </Button>
         <Button type="submit" disabled={submitting}>
-          {submitting ? "Submitting..." : "Submit Request"}
+          {submitting ? "Submitting..." : "Submit Job Request"}
         </Button>
       </div>
     </form>

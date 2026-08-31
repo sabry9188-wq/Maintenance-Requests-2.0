@@ -22,9 +22,9 @@ export default async function NewRequestPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Create Maintenance Request</h1>
+        <h1 className="text-xl font-semibold text-neutral-900">Create Maintenance Request (JRF)</h1>
         <p className="text-sm text-neutral-500">
-          The request number is generated automatically once you submit.
+          The JRF number is generated automatically once you submit.
         </p>
       </div>
       <RequestForm

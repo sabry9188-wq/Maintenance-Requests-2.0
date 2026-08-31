@@ -212,12 +212,14 @@ You should see the login page.
 
 ## 10. Create the first Admin user
 
-New accounts are **not** admins by default (for safety) — every new sign-up starts as a Station
-User with no station or department assigned, until an Administrator sets them up. So the very
-first Admin has to be created manually, once:
+At sign-up, users pick their own Station and Department from a dropdown, so they can start
+working right away. New accounts are **never** admins by default though (for safety) — every
+sign-up starts as a regular Station/Department User, and only an Administrator can promote
+someone to Admin, Engineering Manager, Engineer, or Management. So the very first Admin has to be
+created manually, once:
 
-1. On the running website, click **Register** and create an account with your own name, email
-   and a password
+1. On the running website, click **Register** and create an account with your own name, email,
+   password, station and department
 2. Go back to the Supabase **SQL Editor**, click **New query**, and run this command — replace
    the email with the one you just registered:
 
@@ -237,14 +239,13 @@ the app itself, instead of using SQL.
 
 As an Admin:
 
-1. Ask each person to **Register** their own account (or register them yourself using the same
-   email/password approach)
-2. Go to **Users** in the left navigation
-3. Click the pencil icon next to a user, and set their:
-   - **Role**: Admin, Station/Department User, Engineering Manager, Engineer/Technician, or
-     Management (View Only)
-   - **Station** and **Department** (for station/department users)
-4. Click **Save**
+1. Ask each person to **Register** their own account, picking their own station and department
+   at sign-up
+2. If someone needs a role other than the default "Station/Department User" (e.g. Engineering
+   Manager, Engineer/Technician, Management, or Admin), go to **Users** in the left navigation,
+   click the pencil icon next to their name, and change their **Role**. You can also correct
+   their Station/Department there if they picked the wrong one at sign-up.
+3. Click **Save**
 
 ---
 

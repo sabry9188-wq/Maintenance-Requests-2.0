@@ -36,12 +36,15 @@ alter table audit_logs enable row level security;
 -- Reference tables: readable by every authenticated user, writable by ADMIN
 -- ============================================================================
 
-create policy "reference_read_all" on stations for select to authenticated using (true);
+-- stations/departments are readable by anon too (not just authenticated)
+-- because the registration page needs to show a station/department picker
+-- before the user has an active session.
+create policy "reference_read_all" on stations for select to anon, authenticated using (true);
 create policy "reference_write_admin" on stations for insert to authenticated with check (is_admin());
 create policy "reference_update_admin" on stations for update to authenticated using (is_admin());
 create policy "reference_delete_admin" on stations for delete to authenticated using (is_admin());
 
-create policy "reference_read_all" on departments for select to authenticated using (true);
+create policy "reference_read_all" on departments for select to anon, authenticated using (true);
 create policy "reference_write_admin" on departments for insert to authenticated with check (is_admin());
 create policy "reference_update_admin" on departments for update to authenticated using (is_admin());
 create policy "reference_delete_admin" on departments for delete to authenticated using (is_admin());
