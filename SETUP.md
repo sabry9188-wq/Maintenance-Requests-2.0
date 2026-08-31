@@ -80,12 +80,16 @@ Supabase is the database and login system this app uses. It is free to start.
 ## 4. Get your Supabase URL and API key
 
 1. In your new Supabase project, click the **Settings** (gear icon) in the left sidebar
-2. Click **API**
+2. Click **API** (or **API Keys** on newer projects)
 3. You will see:
    - **Project URL** — looks like `https://xxxxxxxxxxxx.supabase.co`
-   - **Project API keys** → the **`anon` `public`** key (a long string of letters and numbers).
-     Newer Supabase projects may label this the **publishable key** instead — either one works,
-     just make sure you copy the public/anon one, **not** the `service_role` / secret key.
+   - **Publishable key** (older projects call this the **`anon` `public`** key) — a long string
+     starting with `sb_publishable_...` (or just letters/numbers on older projects)
+   - **Secret keys** section → the **`service_role`** / secret key, starting with `sb_secret_...`.
+     This one is only needed if you want Admins to be able to **invite** users directly (see
+     Step 11) — it grants full access to your database, bypassing all security rules, so treat it
+     like a master password. If you don't plan to use the Invite feature yet, you can skip
+     copying this one for now and add it later.
 
 Keep this browser tab open — you'll copy these into a file in the next step.
 
@@ -99,18 +103,21 @@ are never accidentally uploaded to GitHub.
 1. In the project folder, find the file `.env.example`
 2. Make a copy of it and rename the copy to `.env.local` (exact name, including the dot at the
    start)
-3. Open `.env.local` in VS Code and fill in the two values you copied in Step 4:
+3. Open `.env.local` in VS Code and fill in the values you copied in Step 4:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-long-anon-key-here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-publishable-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-secret-key-here
 ```
 
 4. Save the file.
 
 `.env.local` is already listed in `.gitignore`, so it will **never** be uploaded to GitHub. This
-is intentional — these values are safe to use in the browser, but each person/environment should
-have their own copy of this file, never committed to source control.
+is intentional. Note the difference between the first two values and the third: the
+`NEXT_PUBLIC_` ones are safe to expose in the browser (that's what the prefix means), but
+`SUPABASE_SERVICE_ROLE_KEY` has **no** `NEXT_PUBLIC_` prefix on purpose — it is only ever read by
+server-side code and must never be shared, committed, or pasted anywhere public.
 
 ---
 
@@ -237,15 +244,28 @@ the app itself, instead of using SQL.
 
 ## 11. Assign roles to other users
 
-As an Admin:
+There are two ways to add people, as an Admin:
 
+**Option A - Invite them directly** (needs `SUPABASE_SERVICE_ROLE_KEY` set, from Step 5):
+1. Go to **Users** in the left navigation
+2. Click **Invite User**
+3. Fill in their email, optionally their name, their **Role**, **Station** and **Department**
+4. Click **Send Invite** - they'll get an email with a link to set their own password and start
+   using the app immediately with the role/station/department you already chose for them
+
+**Option B - Let them self-register:**
 1. Ask each person to **Register** their own account, picking their own station and department
    at sign-up
-2. If someone needs a role other than the default "Station/Department User" (e.g. Engineering
-   Manager, Engineer/Technician, Management, or Admin), go to **Users** in the left navigation,
-   click the pencil icon next to their name, and change their **Role**. You can also correct
-   their Station/Department there if they picked the wrong one at sign-up.
+2. If they need a role other than the default "Station/Department User" (e.g. Engineering
+   Manager, Engineer/Technician, Management, or Admin), go to **Users**, click the pencil icon
+   next to their name, and change their **Role**. You can also correct their Station/Department
+   there if they picked the wrong one at sign-up.
 3. Click **Save**
+
+Note on invite emails: Supabase's built-in email sending has a low rate limit meant for testing.
+If invite emails aren't arriving reliably once you have many people to add, go to **Authentication
+→ Providers → Email → SMTP Settings** in Supabase and connect your own email provider (e.g.
+Resend, SendGrid) for reliable delivery in production.
 
 ---
 
