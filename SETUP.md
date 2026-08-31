@@ -246,12 +246,15 @@ the app itself, instead of using SQL.
 
 There are two ways to add people, as an Admin:
 
-**Option A - Invite them directly** (needs `SUPABASE_SERVICE_ROLE_KEY` set, from Step 5):
+**Option A - Create their account directly** (needs `SUPABASE_SERVICE_ROLE_KEY` set, from
+Step 5) - best when people may not check email reliably:
 1. Go to **Users** in the left navigation
-2. Click **Invite User**
-3. Fill in their email, optionally their name, their **Role**, **Station** and **Department**
-4. Click **Send Invite** - they'll get an email with a link to set their own password and start
-   using the app immediately with the role/station/department you already chose for them
+2. Click **Add User**
+3. Fill in their name, email, a **password** you choose for them, their **Role**, **Station**
+   and **Department**
+4. Click **Create Account** - the account is ready immediately, no email confirmation needed
+5. Tell them the email and password directly (in person, by phone, WhatsApp, etc.) so they can
+   sign in right away. They can change their password later from their own profile if they want.
 
 **Option B - Let them self-register:**
 1. Ask each person to **Register** their own account, picking their own station and department
@@ -261,11 +264,6 @@ There are two ways to add people, as an Admin:
    next to their name, and change their **Role**. You can also correct their Station/Department
    there if they picked the wrong one at sign-up.
 3. Click **Save**
-
-Note on invite emails: Supabase's built-in email sending has a low rate limit meant for testing.
-If invite emails aren't arriving reliably once you have many people to add, go to **Authentication
-→ Providers → Email → SMTP Settings** in Supabase and connect your own email provider (e.g.
-Resend, SendGrid) for reliable delivery in production.
 
 ---
 

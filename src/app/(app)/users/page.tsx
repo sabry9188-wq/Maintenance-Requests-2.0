@@ -16,7 +16,7 @@ export default async function UsersPage() {
         <div>
           <h1 className="text-xl font-semibold text-neutral-900">Users</h1>
           <p className="text-sm text-neutral-500">
-            Invite new users directly, or manage roles/stations/departments for people who registered themselves.
+            Create accounts directly with a password, or manage roles/stations/departments for people who registered themselves.
           </p>
         </div>
         <InviteUserForm stations={stations} departments={departments} />

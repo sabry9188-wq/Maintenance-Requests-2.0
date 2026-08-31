@@ -67,14 +67,15 @@ export const assetSchema = z.object({
 });
 export type AssetInput = z.infer<typeof assetSchema>;
 
-export const inviteUserSchema = z.object({
+export const createUserSchema = z.object({
   email: z.string().trim().email("Please enter a valid email address"),
-  full_name: z.string().trim().optional().or(z.literal("")),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  full_name: z.string().trim().min(1, "Full name is required"),
   role: z.enum(["ADMIN", "STATION_USER", "ENGINEERING_MANAGER", "ENGINEER", "MANAGEMENT_VIEW_ONLY"]),
   station_id: z.string().uuid().optional().or(z.literal("")),
   department_id: z.string().uuid().optional().or(z.literal("")),
 });
-export type InviteUserInput = z.infer<typeof inviteUserSchema>;
+export type CreateUserInput = z.infer<typeof createUserSchema>;
 
 export const userUpdateSchema = z.object({
   id: z.string().uuid(),

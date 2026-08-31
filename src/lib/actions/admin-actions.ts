@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/auth/require-role";
@@ -14,7 +13,7 @@ import {
   problemTypeSchema,
   slaConfigSchema,
   userUpdateSchema,
-  inviteUserSchema,
+  createUserSchema,
   type StationInput,
   type DepartmentInput,
   type AreaInput,
@@ -22,7 +21,7 @@ import {
   type ProblemTypeInput,
   type SlaConfigInput,
   type UserUpdateInput,
-  type InviteUserInput,
+  type CreateUserInput,
 } from "@/lib/validation/admin-schema";
 import type { ActionResult } from "./request-actions";
 
@@ -133,25 +132,22 @@ export async function updateUserAssignment(input: UserUpdateInput): Promise<Acti
   return { success: true, data: undefined };
 }
 
-export async function inviteUser(input: InviteUserInput): Promise<ActionResult> {
+export async function createUserAccount(input: CreateUserInput): Promise<ActionResult> {
   await requireAdmin();
-  const parsed = inviteUserSchema.safeParse(input);
+  const parsed = createUserSchema.safeParse(input);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid data." };
   const values = parsed.data;
 
-  const headerList = await headers();
-  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "localhost:3000";
-  const proto = headerList.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const origin = `${proto}://${host}`;
-
   const admin = createAdminClient();
-  const { data, error } = await admin.auth.admin.inviteUserByEmail(values.email, {
-    data: {
-      full_name: values.full_name || undefined,
+  const { data, error } = await admin.auth.admin.createUser({
+    email: values.email,
+    password: values.password,
+    email_confirm: true,
+    user_metadata: {
+      full_name: values.full_name,
       station_id: values.station_id || undefined,
       department_id: values.department_id || undefined,
     },
-    redirectTo: `${origin}/reset-password`,
   });
 
   if (error || !data.user) {
@@ -159,7 +155,7 @@ export async function inviteUser(input: InviteUserInput): Promise<ActionResult> 
     if (message.includes("already been registered") || message.includes("already registered")) {
       return { success: false, error: "This email is already registered." };
     }
-    return { success: false, error: toUserMessage(error, "Unable to invite this user. Please check the email address.") };
+    return { success: false, error: toUserMessage(error, "Unable to create this account. Please check the email address.") };
   }
 
   const { error: updateError } = await admin
